@@ -10,10 +10,10 @@
       --bg-main: #0b1120; --bg-panel: #1e293b; --bg-num: #334155; --bg-emo: #334155;
       --bg-reason: #334155; --bg-selected: #0ea5e9; --border: #475569; --btn-send: #3b82f6;
       --txt-main: #e2e8f0; --txt-status-bg: #0f172a;
-      --txt-header: 15px; --txt-panel: 13px; --btn-num: 14px; --btn-emo: 18px;
-      --btn-reason: 23px; --emo-icon: 100px; --reason-icon: 60px;
+      --txt-header: 15px; --txt-panel: 13px; --btn-num: 14px; --btn-emo: 13px;
+      --btn-reason: 19px; --emo-icon: 50px; --reason-icon: 60px;
       --banner-idps: 16px; --banner-text: 13px; --status-text: 14px;
-      --txt-num-lista: 17px; --txt-nom-est: 10px;
+      --txt-num-lista: 15px; --txt-nom-est: 8px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
     html, body {
@@ -39,19 +39,19 @@
     .banner-idps { font-size: var(--banner-idps); font-weight: 800; letter-spacing: 2px; }
     .banner-text { font-size: var(--banner-text); font-weight: 700; opacity: 0.9; }
 
-    /* ✅ DISTRIBUCIÓN SOLICITADA: 45% | 30% | 25% */
+    /* ✅ DISTRIBUCIÓN: 45% | 30% | 25% */
     main { flex: 1; display: grid; grid-template-columns: 45% 30% 25%; gap: 8px; padding: 8px; min-height: 0; }
     .panel { background: var(--bg-panel); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
     .panel h3 { font-size: var(--txt-panel); color: #94a3b8; text-align: center; margin: 0; flex-shrink: 0; }
     .grid { display: grid; gap: 5px; flex: 1; overflow: hidden; align-content: stretch; }
-    #gridLista { grid-template-columns: repeat(5, 1fr); }
+    #gridLista { grid-template-columns: repeat(5, 1fr); overflow-y: auto !important; scrollbar-width: thin; scrollbar-color: #475569 transparent; }
     #gridEmociones { grid-template-columns: repeat(3, 1fr); }
     #gridRazones { grid-template-columns: 1fr; }
     .btn-tile { border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.15s; padding: 4px; white-space: normal; word-break: break-word; }
     .btn-tile:active { transform: scale(0.94); }
     .btn-tile.selected { background: var(--bg-selected) !important; border-color: #38bdf8 !important; color: #0f172a !important; font-weight: 600; }
     #gridLista .btn-tile { background: var(--bg-num); color: var(--txt-main); font-size: var(--btn-num); min-height: 40px; }
-    #gridEmociones .btn-tile { background: var(--bg-emo); color: var(--txt-main); font-size: var(--btn-emo); min-height: 125px; flex-direction: column; padding: 6px 4px; }
+    #gridEmociones .btn-tile { background: var(--bg-emo); color: var(--txt-main); font-size: var(--btn-emo); min-height: 90px; flex-direction: column; padding: 6px 4px; }
     #gridEmociones .btn-tile .emo-icon { font-size: var(--emo-icon); line-height: 1; margin-bottom: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 100%; }
     #gridRazones .btn-tile { background: var(--bg-reason); color: var(--txt-main); font-size: var(--btn-reason); min-height: 52px; flex-direction: row; padding: 8px 10px; gap: 10px; align-items: center; }
     #gridRazones .btn-tile .reason-img { width: var(--reason-icon); height: var(--reason-icon); flex-shrink: 0; object-fit: contain; }
@@ -64,15 +64,15 @@
     }
     .ok { color: #4ade80; } .err { color: #f87171; } .warn { color: #fbbf24; }
 
-    /* ✅ LISTA: 2 LÍNEAS (Nº + NOMBRE) CON TAMAÑOS INDEPENDIENTES */
+    /* ✅ LISTA: 2 LÍNEAS (Nº + NOMBRE) */
     #gridLista.lista-nombres .btn-tile {
-      flex-direction: column !important; min-height: 48px !important; padding: 3px 2px !important; gap: 2px;
+      flex-direction: column !important; min-height: 42px !important; padding: 3px 2px !important; gap: 2px;
     }
     #gridLista.lista-nombres .btn-tile .num-line { 
-      font-size: var(--txt-num-lista); font-weight: 700; line-height: 1; display: block; opacity: 0.7;
+      font-size: var(--txt-num-lista); font-weight: 700; line-height: 1; display: block; opacity: 0.75;
     }
     #gridLista.lista-nombres .btn-tile .name-line {
-      font-size: var(--txt-nom-est); font-weight: 600; line-height: 1.15; display: block; white-space: normal; word-break: break-word;
+      font-size: var(--txt-nom-est); font-weight: 600; line-height: 1.1; display: block; white-space: normal; word-break: break-word;
     }
 
     #settingsOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 1000; display: flex; align-items: center; justify-content: center; }
@@ -137,14 +137,14 @@
         <div class="cfg-section"><h3>🔤 Textos Interiores</h3>
           <div class="cfg-row"><label>Títulos Paneles</label><div class="num-control"><button type="button" onclick="ajustar('panel',-1)">−</button><span id="disp-panel">13</span><button type="button" onclick="ajustar('panel',1)">+</button></div><input type="hidden" id="cfg-panel" value="13"></div>
           <div class="cfg-row"><label>Números Lista</label><div class="num-control"><button type="button" onclick="ajustar('num',-1)">−</button><span id="disp-num">14</span><button type="button" onclick="ajustar('num',1)">+</button></div><input type="hidden" id="cfg-num" value="14"></div>
-          <div class="cfg-row"><label>Emociones (letra)</label><div class="num-control"><button type="button" onclick="ajustar('emo',-1)">−</button><span id="disp-emo">18</span><button type="button" onclick="ajustar('emo',1)">+</button></div><input type="hidden" id="cfg-emo" value="18"></div>
-          <div class="cfg-row"><label>Razones</label><div class="num-control"><button type="button" onclick="ajustar('reason',-1)">−</button><span id="disp-reason">23</span><button type="button" onclick="ajustar('reason',1)">+</button></div><input type="hidden" id="cfg-reason" value="23"></div>
+          <div class="cfg-row"><label>Emociones (letra)</label><div class="num-control"><button type="button" onclick="ajustar('emo',-1)">−</button><span id="disp-emo">13</span><button type="button" onclick="ajustar('emo',1)">+</button></div><input type="hidden" id="cfg-emo" value="13"></div>
+          <div class="cfg-row"><label>Razones</label><div class="num-control"><button type="button" onclick="ajustar('reason',-1)">−</button><span id="disp-reason">19</span><button type="button" onclick="ajustar('reason',1)">+</button></div><input type="hidden" id="cfg-reason" value="19"></div>
           <div class="cfg-row"><label>Menú Superior</label><div class="num-control"><button type="button" onclick="ajustar('header',-1)">−</button><span id="disp-header">15</span><button type="button" onclick="ajustar('header',1)">+</button></div><input type="hidden" id="cfg-header" value="15"></div>
-          <div class="cfg-row"><label>Nº Lista (Botón)</label><div class="num-control"><button type="button" onclick="ajustar('numlista',-1)">−</button><span id="disp-numlista">17</span><button type="button" onclick="ajustar('numlista',1)">+</button></div><input type="hidden" id="cfg-numlista" value="17"></div>
-          <div class="cfg-row"><label>Nombre Est.</label><div class="num-control"><button type="button" onclick="ajustar('nomest',-1)">−</button><span id="disp-nomest">10</span><button type="button" onclick="ajustar('nomest',1)">+</button></div><input type="hidden" id="cfg-nomest" value="10"></div>
+          <div class="cfg-row"><label>Nº Lista (Botón)</label><div class="num-control"><button type="button" onclick="ajustar('numlista',-1)">−</button><span id="disp-numlista">15</span><button type="button" onclick="ajustar('numlista',1)">+</button></div><input type="hidden" id="cfg-numlista" value="15"></div>
+          <div class="cfg-row"><label>Nombre Est.</label><div class="num-control"><button type="button" onclick="ajustar('nomest',-1)">−</button><span id="disp-nomest">8</span><button type="button" onclick="ajustar('nomest',1)">+</button></div><input type="hidden" id="cfg-nomest" value="8"></div>
         </div>
         <div class="cfg-section"><h3>🖼️ Iconos</h3>
-          <div class="cfg-row"><label>Emociones</label><div class="num-control"><button type="button" onclick="ajustar('icon',-2)">−</button><span id="disp-icon">100</span><button type="button" onclick="ajustar('icon',2)">+</button></div><input type="hidden" id="cfg-icon" value="100"></div>
+          <div class="cfg-row"><label>Emociones</label><div class="num-control"><button type="button" onclick="ajustar('icon',-2)">−</button><span id="disp-icon">50</span><button type="button" onclick="ajustar('icon',2)">+</button></div><input type="hidden" id="cfg-icon" value="50"></div>
           <div class="cfg-row"><label>Razones</label><div class="num-control"><button type="button" onclick="ajustar('reasonicon',-2)">−</button><span id="disp-reasonicon">60</span><button type="button" onclick="ajustar('reasonicon',2)">+</button></div><input type="hidden" id="cfg-reasonicon" value="60"></div>
         </div>
         <div class="cfg-section"><h3>📢 Banner y Barra Inferior</h3>
@@ -182,8 +182,8 @@
     };
 
     const DEFAULT_CFG = { 
-      panel:13, num:14, emo:18, reason:23, header:15, icon:100, reasonicon:60,
-      banneridps: 16, bannertext: 13, statustext: 14, numlista: 17, nomest: 10,
+      panel:13, num:14, emo:13, reason:19, header:15, icon:50, reasonicon:60,
+      banneridps: 16, bannertext: 13, statustext: 14, numlista: 15, nomest: 8,
       cbgmain:"#0b1120", cbgpanel:"#1e293b", cbgnum:"#334155", cbgemo:"#334155", 
       cbgreason:"#334155", csend:"#3b82f6", cselected:"#0ea5e9", ctext:"#e2e8f0", cborder:"#475569" 
     };
