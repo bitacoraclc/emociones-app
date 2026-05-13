@@ -13,6 +13,7 @@
       --txt-header: 15px; --txt-panel: 13px; --btn-num: 14px; --btn-emo: 12px;
       --btn-reason: 14px; --emo-icon: 100px; --reason-icon: 60px;
       --banner-idps: 16px; --banner-text: 13px; --status-text: 14px;
+      --txt-num-lista: 11px; --txt-nom-est: 13px;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; touch-action: manipulation; }
     html, body {
@@ -29,7 +30,6 @@
     #btnSend:active:not(:disabled) { transform: scale(0.98); filter: brightness(1.15); }
     .header-btn { background: var(--bg-num); color: var(--txt-main); border: 1px solid var(--border); border-radius: 8px; padding: 0 14px; cursor: pointer; font-size: 1.3em; align-self: center; }
 
-    /* ✅ FRANJA EN UNA SOLA LÍNEA */
     #topBanner {
       display: flex; align-items: center; justify-content: center; gap: 10px;
       padding: 8px 12px; min-height: 44px; background: var(--txt-status-bg);
@@ -43,7 +43,7 @@
     .panel { background: var(--bg-panel); border-radius: 10px; padding: 8px; display: flex; flex-direction: column; gap: 6px; overflow: hidden; }
     .panel h3 { font-size: var(--txt-panel); color: #94a3b8; text-align: center; margin: 0; flex-shrink: 0; }
     .grid { display: grid; gap: 5px; flex: 1; overflow: hidden; align-content: stretch; }
-    #gridLista { grid-template-columns: repeat(6, 1fr); }
+    #gridLista { grid-template-columns: repeat(5, 1fr); }
     #gridEmociones { grid-template-columns: repeat(3, 1fr); }
     #gridRazones { grid-template-columns: 1fr; }
     .btn-tile { border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: 0.15s; padding: 4px; white-space: normal; word-break: break-word; }
@@ -63,7 +63,17 @@
     }
     .ok { color: #4ade80; } .err { color: #f87171; } .warn { color: #fbbf24; }
 
-    /* ✅ PANEL DE CONFIGURACIÓN OPTIMIZADO */
+    /* ✅ LISTA: 2 LÍNEAS (Nº + NOMBRE) CON TAMAÑOS INDEPENDIENTES */
+    #gridLista.lista-nombres .btn-tile {
+      flex-direction: column !important; min-height: 62px !important; padding: 4px 3px !important; gap: 3px;
+    }
+    #gridLista.lista-nombres .btn-tile .num-line { 
+      font-size: var(--txt-num-lista); font-weight: 700; line-height: 1; display: block; opacity: 0.7;
+    }
+    #gridLista.lista-nombres .btn-tile .name-line {
+      font-size: var(--txt-nom-est); font-weight: 600; line-height: 1.15; display: block; white-space: normal; word-break: break-word;
+    }
+
     #settingsOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); opacity: 0; pointer-events: none; transition: opacity 0.2s; z-index: 1000; display: flex; align-items: center; justify-content: center; }
     #settingsOverlay.active { opacity: 1; pointer-events: auto; }
     #settingsPanel { 
@@ -129,6 +139,8 @@
           <div class="cfg-row"><label>Emociones (letra)</label><div class="num-control"><button type="button" onclick="ajustar('emo',-1)">−</button><span id="disp-emo">12</span><button type="button" onclick="ajustar('emo',1)">+</button></div><input type="hidden" id="cfg-emo" value="12"></div>
           <div class="cfg-row"><label>Razones</label><div class="num-control"><button type="button" onclick="ajustar('reason',-1)">−</button><span id="disp-reason">14</span><button type="button" onclick="ajustar('reason',1)">+</button></div><input type="hidden" id="cfg-reason" value="14"></div>
           <div class="cfg-row"><label>Menú Superior</label><div class="num-control"><button type="button" onclick="ajustar('header',-1)">−</button><span id="disp-header">15</span><button type="button" onclick="ajustar('header',1)">+</button></div><input type="hidden" id="cfg-header" value="15"></div>
+          <div class="cfg-row"><label>Nº Lista (Botón)</label><div class="num-control"><button type="button" onclick="ajustar('numlista',-1)">−</button><span id="disp-numlista">11</span><button type="button" onclick="ajustar('numlista',1)">+</button></div><input type="hidden" id="cfg-numlista" value="11"></div>
+          <div class="cfg-row"><label>Nombre Est.</label><div class="num-control"><button type="button" onclick="ajustar('nomest',-1)">−</button><span id="disp-nomest">13</span><button type="button" onclick="ajustar('nomest',1)">+</button></div><input type="hidden" id="cfg-nomest" value="13"></div>
         </div>
         <div class="cfg-section"><h3>🖼️ Iconos</h3>
           <div class="cfg-row"><label>Emociones</label><div class="num-control"><button type="button" onclick="ajustar('icon',-2)">−</button><span id="disp-icon">100</span><button type="button" onclick="ajustar('icon',2)">+</button></div><input type="hidden" id="cfg-icon" value="100"></div>
@@ -163,18 +175,14 @@
       "Alegría": "😊", "Tristeza": "😢", "Enojo": "😠", "Miedo": "😨", "Calma": "😌",
       "Ansiedad": "😰", "Cansancio": "😫", "Motivación": "🔥", "Aburrimiento": "😑"
     };
-
     const ICONOS_RAZONES = {
-      "Familia / Hogar": "🏠",
-      "Clases / Aprendizaje": "📝",
-      "Compañeros/as": `<img src="companeros.ico" class="reason-img">`,
-      "Yo mismo/a": `<img src="yo.ico" class="reason-img">`,
-      "No estoy seguro/a": "❓"
+      "Familia / Hogar": "🏠", "Clases / Aprendizaje": "📝",
+      "Compañeros/as": "👧🏻🧒🏻", "Yo mismo/a": "🧍🏻", "No estoy seguro/a": "❓"
     };
 
     const DEFAULT_CFG = { 
       panel:16, num:26, emo:13, reason:28, header:15, icon:68, reasonicon:60,
-      banneridps: 15, bannertext: 14, statustext: 17,
+      banneridps: 15, bannertext: 14, statustext: 17, numlista: 11, nomest: 13,
       cbgmain:"#0b1120", cbgpanel:"#1e293b", cbgnum:"#334155", cbgemo:"#334155", 
       cbgreason:"#334155", csend:"#3b82f6", cselected:"#0ea5e9", ctext:"#e2e8f0", cborder:"#475569" 
     };
@@ -182,54 +190,43 @@
     const CSS_MAP = { 
       panel:'--txt-panel', num:'--btn-num', emo:'--btn-emo', reason:'--btn-reason', header:'--txt-header', 
       icon:'--emo-icon', reasonicon:'--reason-icon', banneridps:'--banner-idps', bannertext:'--banner-text', statustext:'--status-text',
+      numlista:'--txt-num-lista', nomest:'--txt-nom-est',
       cbgmain:'--bg-main', cbgpanel:'--bg-panel', cbgnum:'--bg-num', cbgemo:'--bg-emo', cbgreason:'--bg-reason', csend:'--btn-send', cselected:'--bg-selected', ctext:'--txt-main', cborder:'--border' 
     };
     
     function applyCfg(c) { Object.keys(c).forEach(k => { const v = CSS_MAP[k]; if(v) document.documentElement.style.setProperty(v, k.startsWith('c') ? c[k] : c[k]+'px'); }); }
-    
     function ajustar(key, delta) {
-      const input = document.getElementById(`cfg-${key}`);
-      const disp = document.getElementById(`disp-${key}`);
-      let val = parseInt(input.value) || 0;
-      val += delta;
-      const max = (key==='icon') ? 120 : (key==='reasonicon') ? 100 : 40;
-      const min = 10;
-      val = Math.max(min, Math.min(max, val));
-      
-      input.value = val; disp.textContent = val;
-      const v = CSS_MAP[key];
-      if(v) document.documentElement.style.setProperty(v, key.startsWith('c') ? val : val+'px');
+      const input = document.getElementById(`cfg-${key}`); const disp = document.getElementById(`disp-${key}`);
+      let val = parseInt(input.value) || 0; val += delta;
+      const max = (key==='icon') ? 120 : (key==='reasonicon') ? 100 : 40; const min = 10;
+      val = Math.max(min, Math.min(max, val)); input.value = val; disp.textContent = val;
+      const v = CSS_MAP[key]; if(v) document.documentElement.style.setProperty(v, key.startsWith('c') ? val : val+'px');
     }
-
     function loadCfgToUI() { 
-      const numKeys = ['panel','num','emo','reason','header','icon','reasonicon','banneridps','bannertext','statustext'];
-      numKeys.forEach(k => { 
+      ['panel','num','emo','reason','header','icon','reasonicon','banneridps','bannertext','statustext','numlista','nomest'].forEach(k => { 
         const inp = document.getElementById(`cfg-${k}`); const d = document.getElementById(`disp-${k}`);
         if(inp) { inp.value = cfg[k]; if(d) d.textContent = cfg[k]; }
       }); 
-      const colKeys = ['cbgmain','cbgpanel','cbgnum','cbgemo','cbgreason','csend','cselected','ctext','cborder'];
-      colKeys.forEach(k => { 
+      ['cbgmain','cbgpanel','cbgnum','cbgemo','cbgreason','csend','cselected','ctext','cborder'].forEach(k => { 
         const el = document.getElementById(`cfg-${k}`); if(el) el.value = cfg[k]; 
       }); 
     }
     function saveConfig() { 
-      const numKeys = ['panel','num','emo','reason','header','icon','reasonicon','banneridps','bannertext','statustext'];
-      const colKeys = ['cbgmain','cbgpanel','cbgnum','cbgemo','cbgreason','csend','cselected','ctext','cborder'];
-      numKeys.forEach(k => { const el=document.getElementById(`cfg-${k}`); if(el) cfg[k]=parseInt(el.value); });
-      colKeys.forEach(k => { const el=document.getElementById(`cfg-${k}`); if(el) cfg[k]=el.value; });
+      ['panel','num','emo','reason','header','icon','reasonicon','banneridps','bannertext','statustext','numlista','nomest'].forEach(k => { const el=document.getElementById(`cfg-${k}`); if(el) cfg[k]=parseInt(el.value); });
+      ['cbgmain','cbgpanel','cbgnum','cbgemo','cbgreason','csend','cselected','ctext','cborder'].forEach(k => { const el=document.getElementById(`cfg-${k}`); if(el) cfg[k]=el.value; });
       localStorage.setItem('app_cfg', JSON.stringify(cfg)); applyCfg(cfg); toggleSettings(); mostrarStatus("✅ Configuración guardada", "ok"); 
     }
     function resetConfig() { cfg = {...DEFAULT_CFG}; loadCfgToUI(); saveConfig(); }
     function toggleSettings() { document.getElementById('settingsOverlay').classList.toggle('active'); }
 
-    const cursos = []; ["PKA","PKB","PKC","KA","KB","KC"].forEach(c => cursos.push(c)); for(let i=1;i<=8;i++) ["A","B","C"].forEach(l => cursos.push(i+"°"+l)); ["I°","II°","III°","IV°"].forEach(r => ["A","B","C"].forEach(l => cursos.push(r+l)));
+    // ===== CURSOS & GRIDS =====
+    const cursos = []; 
+    ["PKA","PKB","PKC","KA","KB","KC"].forEach(c => cursos.push(c)); 
+    for(let i=1;i<=8;i++) ["A","B","C"].forEach(l => cursos.push(i+"°"+l)); 
+    ["I°","II°","III°","IV°"].forEach(r => ["A","B","C"].forEach(l => cursos.push(r+l)));
+    
     const select = document.getElementById('cursoSelect'); cursos.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; select.appendChild(o); });
-
     const gridLista = document.getElementById('gridLista'); 
-    for(let i=1;i<=30;i++) { 
-      const b = document.createElement('button'); b.className='btn-tile'; b.dataset.val=i; b.dataset.tipo='lista';
-      b.innerHTML=`<span>${i}</span>`; b.onclick=()=>sel('lista',i,b); gridLista.appendChild(b); 
-    }
     const roles = ["PJ", "PA", "PR", "O"]; const rolesRow = document.getElementById('rolesRow'); 
     roles.forEach(r => { 
       const b = document.createElement('button'); b.className='btn-tile'; b.dataset.val=r; b.dataset.tipo='rol';
@@ -238,60 +235,87 @@
     const emociones = Object.keys(ICONOS_EMOJI); const gridEmociones = document.getElementById('gridEmociones'); 
     emociones.forEach(nombre => { 
       const b = document.createElement('button'); b.className='btn-tile'; b.dataset.val=nombre; 
-      b.innerHTML=`<div class="emo-icon">${ICONOS_EMOJI[nombre]}</div><span>${nombre}</span>`; 
-      b.onclick=()=>sel('emocion', nombre, b); gridEmociones.appendChild(b); 
+      b.innerHTML=`<div class="emo-icon">${ICONOS_EMOJI[nombre]}</div><span>${nombre}</span>`; b.onclick=()=>sel('emocion', nombre, b); gridEmociones.appendChild(b); 
     });
     const razones = Object.keys(ICONOS_RAZONES); const gridRazones = document.getElementById('gridRazones'); 
     razones.forEach(r => { 
       const b = document.createElement('button'); b.className='btn-tile'; b.dataset.val=r; 
-      b.innerHTML = `${ICONOS_RAZONES[r]} <span>${r}</span>`; 
-      b.onclick=()=>sel('razon', r, b); gridRazones.appendChild(b); 
+      b.innerHTML = `${ICONOS_RAZONES[r]} <span>${r}</span>`; b.onclick=()=>sel('razon', r, b); gridRazones.appendChild(b); 
     });
 
+    // ===== LISTA DE ESTUDIANTES =====
+    function renderListaNumeros() {
+      gridLista.innerHTML = ''; gridLista.classList.remove('lista-nombres');
+      for(let i=1; i<=30; i++) {
+        const btn = document.createElement('button'); btn.className='btn-tile'; btn.dataset.val=i; btn.dataset.tipo='lista';
+        btn.innerHTML=`<span>${i}</span>`; btn.onclick=()=>sel('lista', i, btn); gridLista.appendChild(btn); 
+      }
+    }
+    function renderListaNombres(estudiantes) {
+      gridLista.innerHTML = ''; gridLista.classList.add('lista-nombres');
+      estudiantes.forEach(est => {
+        const btn = document.createElement('button'); btn.className='btn-tile'; btn.dataset.val=est.numero; btn.dataset.tipo='lista';
+        btn.innerHTML=`<span class="num-line">${est.numero}</span><span class="name-line">${est.nombre}</span>`;
+        btn.onclick=()=>sel('lista', est.numero, btn); gridLista.appendChild(btn);
+      });
+    }
+    async function cargarListaEstudiantes(curso) {
+      try {
+        const res = await fetch(`${WEBHOOK_URL}?curso=${encodeURIComponent(curso)}`, { method: 'GET', mode: 'cors' });
+        const data = await res.json();
+        if (!data.error && Array.isArray(data.students) && data.students.length > 0) renderListaNombres(data.students);
+        else renderListaNumeros();
+      } catch { renderListaNumeros(); }
+    }
+
+    // ===== ESTADO & UI =====
     let estado = { curso: null, lista: null, emocion: null, razon: null };
     const statusEl = document.getElementById('status'); const btnSend = document.getElementById('btnSend');
     function mostrarStatus(mensaje, clase) { statusEl.textContent = mensaje; statusEl.className = clase || ""; if(clase) setTimeout(()=>{ statusEl.textContent=""; statusEl.className=""; }, 3000); }
-
     function sel(tipo, val, el) {
       if (tipo === 'lista') {
-        const esNumero = !isNaN(val);
-        if (esNumero) document.querySelectorAll('#rolesRow .btn-tile.selected').forEach(x => x.classList.remove('selected'));
-        else document.querySelectorAll('#gridLista .btn-tile.selected').forEach(x => x.classList.remove('selected'));
+        const esNumero = typeof val === 'number';
+        if (esNumero) rolesRow.querySelectorAll('.btn-tile.selected').forEach(x => x.classList.remove('selected'));
+        else gridLista.querySelectorAll('.btn-tile.selected').forEach(x => x.classList.remove('selected'));
         el.parentElement.querySelectorAll('.btn-tile').forEach(x => x.classList.remove('selected'));
       } else {
         el.parentElement.querySelectorAll('.btn-tile').forEach(x => x.classList.remove('selected'));
       }
       estado[tipo] = val; el.classList.add('selected'); update();
     }
-    select.onchange=()=>{ estado.curso=select.value; update(); };
+    select.onchange = function() {
+      estado.curso = this.value; update();
+      if (estado.curso) cargarListaEstudiantes(estado.curso);
+      else renderListaNumeros();
+    };
     function update() { 
       const ok = estado.curso && estado.lista && estado.emocion && estado.razon; 
       btnSend.disabled = !ok; 
-      statusEl.textContent = ok ? `✅ Listo: ${estado.curso} | ${!isNaN(estado.lista)?'Alumno #':'Rol: '}${estado.lista}` : "Selecciona curso, alumno/rol, emoción y razón"; 
-    }
-
-    function guardarEnCola(datos) { let cola = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); cola.push({ timestamp: new Date().toISOString(), datos }); localStorage.setItem(STORAGE_KEY, JSON.stringify(cola)); }
-    async function sincronizarCola() { 
-      let cola = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); if (cola.length === 0) return; 
-      const exitosos = []; for (let i = 0; i < cola.length; i++) { try { const p = new URLSearchParams({ curso: cola[i].datos.curso, lista: cola[i].datos.lista, emocion: cola[i].datos.emocion, razon: cola[i].datos.razon }).toString(); const r = await fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: p }); if (r.ok) exitosos.push(i); } catch(e){} } 
-      if(exitosos.length>0){ cola=cola.filter((_,i)=>!exitosos.includes(i)); localStorage.setItem(STORAGE_KEY, JSON.stringify(cola)); } 
-    }
-    window.addEventListener('online', () => sincronizarCola());
-    document.addEventListener('DOMContentLoaded', () => { if(navigator.onLine) sincronizarCola(); });
-
-    btnSend.onclick = async () => { if(btnSend.disabled) return; await enviarRegistro({...estado}); };
-    async function enviarRegistro(data) {
-      const payload = { curso: data.curso, lista: data.lista, emocion: data.emocion, razon: data.razon };
-      mostrarStatus("✅ Registrado", "ok"); limpiarSeleccion();
-      if (navigator.onLine) {
-        fetch(WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(payload).toString(), mode: 'cors' }).then(res => { if(res.ok) sincronizarCola(); }).catch(() => guardarEnCola(payload));
-      } else { guardarEnCola(payload); }
+      statusEl.textContent = ok ? `✅ Listo: ${estado.curso} | Nº ${estado.lista}` : "Selecciona curso, alumno/rol, emoción y razón"; 
     }
     function limpiarSeleccion() { estado = { curso: select.value, lista: null, emocion: null, razon: null }; document.querySelectorAll('.btn-tile.selected').forEach(b => b.classList.remove('selected')); update(); }
 
+    // ===== COLA & ENVÍO EMOCIONES =====
+    function guardarEnCola(datos) { let cola = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); cola.push({ timestamp: new Date().toISOString(), datos }); localStorage.setItem(STORAGE_KEY, JSON.stringify(cola)); }
+    async function sincronizarCola() { 
+      let cola = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); if (!cola.length) return; 
+      const ok = []; for (let i = 0; i < cola.length; i++) { 
+        try { const p = new URLSearchParams(cola[i].datos); const r = await fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p }); if(r.ok) ok.push(i); } catch{} 
+      } if(ok.length){ cola=cola.filter((_,i)=>!ok.includes(i)); localStorage.setItem(STORAGE_KEY, JSON.stringify(cola)); } 
+    }
+    window.addEventListener('online', sincronizarCola);
+    document.addEventListener('DOMContentLoaded', () => { if(navigator.onLine) sincronizarCola(); });
+    btnSend.onclick = async () => { if(btnSend.disabled) return; await enviarRegistro({...estado}); };
+    async function enviarRegistro(data) {
+      mostrarStatus("✅ Registrado", "ok"); limpiarSeleccion();
+      if (navigator.onLine) fetch(WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:new URLSearchParams(data).toString(), mode:'cors' }).then(r=>{if(r.ok)sincronizarCola()}).catch(()=>guardarEnCola(data));
+      else guardarEnCola(data);
+    }
+
+    // ===== FULLSCREEN & BLOQUEOS =====
     let fsInterval; function entrarFullscreen() { const el = document.documentElement; if(el.requestFullscreen) el.requestFullscreen(); else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen(); }
     document.addEventListener('click', function fsOnce() { entrarFullscreen(); document.removeEventListener('click', fsOnce); fsInterval = setInterval(()=>{ if(!document.fullscreenElement && !document.webkitFullscreenElement) entrarFullscreen(); }, 10000); }, { once: true });
-    window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = '¿Seguro?'; });
+    window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => { if([114,122,27].includes(e.keyCode)||(e.ctrlKey&&e.keyCode===82)) e.preventDefault(); });
     document.addEventListener('touchmove', e => { if(e.scale!==1) e.preventDefault(); }, { passive: false });
